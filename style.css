@@ -1,0 +1,177 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: grey;
+  margin: 0;
+}
+
+body::-webkit-scrollbar {
+  width: 1em;
+}
+
+body::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: navy;
+  outline: 1px solid black;
+}
+
+.floatRight {
+  float: right;
+}
+
+.floatRight:after {
+  clear: right;
+}
+
+header {
+  text-align: center;
+  min-height: 8vh;
+  width: 100%;
+  background-color: darkslategray;
+  margin: 0;
+  padding: 1em;
+  border-bottom: 1px double rgba(0, 0, 0, 0.5);
+}
+
+header h1 {
+  text-shadow: -.5px -1.5px black, .5px -.5px black, -.5px .5px black, .5px .5px black;
+  font-size: 3em;
+  font-family: sans-serif;
+  color: rgb(300, 300, 300);
+  margin: 0;
+}
+
+#menuButton {
+  color: teal;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  padding: 0 0.5em 0.5em 0;
+  font-size: 3em;
+  z-index: 10;
+  user-select: none;
+  text-shadow: -1px -1px white, 1px -1px white, -1px 1px white, 1px 1px white;
+}
+
+#menuButton:hover {
+  color: black;
+  cursor: pointer;
+}
+
+/* This is the menu overlay connected to the menu button */
+
+#overlay {
+  z-index: 9;
+  min-width: 300px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: darkslategray;
+  color: grey;
+  border-radius: 50px;
+  box-shadow: 0 0 1em 2px black;
+  text-align: center;
+  font-size: 3em;
+  font-family: "Arial Black";
+  padding: .3em;
+  padding-top: .1em;
+}
+
+#overlay ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#overlay li {
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  text-shadow: 0 0 1px;
+}
+
+#overlay li:hover:not(#menuLi) {
+  cursor: pointer;
+  color: rgba(360, 360, 360, 0.5);
+}
+
+/* This is the menu overlay connected to the menu button */
+
+.webpage {
+  display: none;
+  background-color: grey;
+  padding: 1em;
+  overflow: auto;
+}
+
+table {
+  border-collapse: separate;
+  border-radius: 5px;
+  margin: 0 auto;
+  margin-bottom: 1em;
+}
+
+table,
+th,
+td {
+  border: 1px solid black;
+  background-color: gray;
+}
+
+td:nth-child(even) {
+  background-color: lightgray;
+}
+
+th,
+td {
+  padding: 5px;
+}
+
+th {
+  color: white;
+  font-weight: bold;
+  font-size: 1.5em;
+}
+
+input[type=text],
+input[type=date],
+input[type=time],
+select,
+input[type=password] {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+input[type=button],
+input[type=submit],
+input[type=reset] {
+  background-color: darkslategray;
+  border: none;
+  color: white;
+  padding: 16px 32px;
+  text-decoration: none;
+  cursor: pointer;
+  border-radius: 10px;
+}
+
+label {
+  font-weight: bold;
+  color: white;
+  font-size: 1.5em;
+}
+
+.offScreen {
+  position: fixed !important;
+  top: -100% !important;
+}
