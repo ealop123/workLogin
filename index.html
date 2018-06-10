@@ -52,20 +52,24 @@
   </div>
 
   <div id="builderPage" class="webpage">
-    <div style="overflow: auto;" id="builderTableContainer"><table id="builderTable">
-      
-    </table>
-      
+    <div style="overflow: auto;" id="builderTableContainer">
+      <table id="builderTable">
+      </table>
     </div>
     <label>Employee:
     <select id="userToSchedule">
     </select></label>
+<!--     <div style="display:none;"> -->
     <label>Date:
     <input type="date" id='start_dt'></label>
+<!--     </div> -->
+    <input type="button" class="button" id="thisWeek" value="This Week">
+    <input type="button" class="button" id="nextWeek" value="Next Week"><br>
     <label>Start Time:
-    <input type="time" id="start_tm"></label>
+    <input type="time" id="start_tm" value="00:00"></label>
     <label>End Time:
-    <input type="time" id="end_tm"></label>
+    <input type="time" id="end_tm" value="00:00"></label>
+    <input type="button" class="button floatRight" id="submitSchedule" value="Submit Schedule">
     <input type="button" class="button floatRight" id="scheduleEmployee" value="Enter">
   </div>
 

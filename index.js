@@ -3,45 +3,51 @@ function main() {
   showLoginPage();
   $("#menuButton").click(toggleNavOverlay);
   $("#enterButton").click(loginProcess);
-  $('#password').bind('keyup', function(e) { if (e.keyCode === 13) { loginProcess(); }});
+  $('#password').bind('keyup', function(e) {
+    if (e.keyCode === 13) {
+      loginProcess();
+    }
+  });
   createSchedule();
   $("#scheduleEmployee").click(addToSchedule);
-  
+
   // TESTING 
   testMode();
   launchBuilderPage();
   // TESTING 
 }
 
-function addSpaceForMenuButton () {
+function addSpaceForMenuButton() {
   let menuButtonHeight = $("#menuButton").css("height");
   menuButtonHeight = parseInt(menuButtonHeight);
   let bodyBottomMargin = $("body").css("margin-bottom");
   bodyBottomMargin = parseInt(bodyBottomMargin);
   let newBottomMargin = menuButtonHeight + bodyBottomMargin;
-  $("body").css("margin-bottom", newBottomMargin+"px");
+  $("body").css("margin-bottom", newBottomMargin + "px");
 }
 
 function equipMenu() {
-  $("#overlay ul li").click(function(){
+  $("#overlay ul li").click(function() {
+    if ($(this).text() == "Menu") {return;}
     let myId = $(this).attr("id");
     myId = myId.slice(0, -2);
-    let idToShow = myId+"Page";
+    let idToShow = myId + "Page";
     let pages = $(".webpage");
     pages.css("display", "none");
-    $("#"+idToShow).css("display", "block");
+    $("#" + idToShow).css("display", "block");
     $("#overlay").toggleClass("offScreen");
   });
-  $("#builderLi").click(function(){
+  $("#builderLi").one( "click", function() {
     let myTable = $("#schedule")[0].cloneNode(true);
     $("#builderTable").replaceWith(myTable);
     myTable.id = "builderTable";
+    selectDateFunctionality();
   });
 }
 
 function testMode() {
   $(".webpage").css("display", "none");
-  $("#schedulePage").css("display","block");
+  $("#schedulePage").css("display", "block");
   equipMenu();
 }
 
@@ -126,9 +132,11 @@ function launchPage(username) {
   $("#loginPage").css("display", "none");
   $("header h1").text("Welcome " + upperFirstLetter(username));
   $("#schedulePage").css("display", "block");
-//   $("#menuButton").click(function(){
-//     alert("Works");
-//   })
+  // ACTIVATE MENU BUTTON, 
+  // Highlight current user
+  //   $("#menuButton").click(function(){
+  //     alert("Works");
+  //   })
 }
 
 var userSchedule = {
@@ -140,21 +148,72 @@ var userSchedule = {
   "ezekiel": "05-26.08:00-18:15"
 }
 
+var newSchedule = {
+  "fabio": [],
+  "maria": [],
+  "chas": [],
+  "chris": [],
+  "rachel": [],
+  "ezekiel": []
+}
+
 function addToSchedule() {
-//   Get input information
-//   make into array
-//   create date object
+  //   Get input information
+  let employee = $("#userToSchedule").val()
+  let sDate = $("#start_dt").val();
+  let sTimeInput = $("#start_tm").val();
+  let eTimeInput = $("#end_tm").val();
+  
+  //To create date obj
+  let year = parseInt(sDate.split("-")[0]);
+  let month = parseInt(sDate.split("-")[1]);
+  let date = parseInt(sDate.split("-")[2]);
+  let sDateObj = new Date(year, month-1, date);
+
+  let tdToEdit = $("#builderPage #"+employee.toLowerCase()+
+                   "Td"+sDateObj.getDay());
+  tdToEdit.text(sTimeInput + " - " +eTimeInput);
+  
+
+  
+  
+  /* This is creating an object from start and end times! Potentially
+  useful for future submit schedule option */
+//   let arrayOfInfo = [];
+//   sDate = sDate.split("-");
+//   arrayOfInfo.push(sDate[0]);
+//   arrayOfInfo.push(sDate[1]);
+//   arrayOfInfo.push(sDate[2]);
+//   sTimeInput = sTimeInput.split(":");
+//   arrayOfInfo.push(sTimeInput[0]);
+//   arrayOfInfo.push(sTimeInput[1]);
+//   let s = arrayOfInfo; //A very short variable
+//   let a = 0; //A way to step through index stuffs
+//   let sTime = new Date(s[a++], s[a++], s[a++], s[a++], s[a++]); //I know this doesnt tell you much but I really dont want to write out each thing again and again
+//   arrayOfInfo.pop();
+//   arrayOfInfo.pop(); //Pop last two to enter the eTimeInput
+//   eTimeInput = eTimeInput.split(":");
+//   arrayOfInfo.push(eTimeInput[0]);
+//   arrayOfInfo.push(eTimeInput[1]);
+//   a = 0; //A way to step through index stuffs
+//   let eTime = new Date(s[a++], s[a++], s[a++], s[a++], s[a++]); //I know this doesnt tell you much but I really dont want to write out each thing again and again
+//   alert(sTime + eTime);
+  
+  
+  
+  //   make into array
+  //   create date object
 }
 
 
 // format MM-DD.HH:MM-HH:MM,MM-DD.HH:MM-HH:MM, i.e. 07-02.12:00-18:15,07-03.08:00-15:00
 
-function baseSchedule () { //For testing, create a base schedule
+function baseSchedule() { //For testing, create a base schedule
   for (let i in userSchedule) {
     var arrayOfSchedule = [];
-    for ( let counter = 1; counter <= 7; counter++  ) {
-      let startDateToAdd = new Date(2018, 05, 1+counter);
-      let endDateToAdd = new Date(2018, 05, 1+counter);
+    for (let counter = 1; counter <= 7; counter++) {
+      let startDateToAdd = new Date(2018, 05, 1 + counter);
+      let endDateToAdd = new Date(2018, 05, 1 + counter);
       arrayOfSchedule.push(startDateToAdd);
       arrayOfSchedule.push(endDateToAdd);
     }
@@ -163,6 +222,7 @@ function baseSchedule () { //For testing, create a base schedule
 }
 
 var userRows = {};
+
 function createSchedule() {
   baseSchedule();
   var myTable = $("#schedule")[0];
@@ -171,7 +231,7 @@ function createSchedule() {
     let myUser = i;
     userRows[myUser] = document.createElement("tr");
     let userTr = userRows[myUser];
-    userTr.id = myUser+"Tr";
+    userTr.id = myUser + "Tr";
     let th = document.createElement("th");
     let thText = document.createTextNode(upperFirstLetter(myUser));
     th.appendChild(thText);
@@ -180,19 +240,35 @@ function createSchedule() {
   }
   //for each row add the times worked
   propagateRows();
-  
+
 }
 
-function propagateRows () {
+function addSpecificIdToTd() {
+  for ( let user in userRows ) {
+	let currentRow = userRows[user];
+    let arrayOfRowElements = currentRow.childNodes;
+    for ( let i in arrayOfRowElements) {
+        let rowElement = arrayOfRowElements[i];
+        if (rowElement.id !== "") {
+            rowElement.id = currentRow.id.slice(0,-1) + "d" + rowElement.id;
+        }
+    }
+  }
+}
+
+function propagateRows() {
   for (let user in userSchedule) {
     let mySchedule = userSchedule[user];
     let myRow = userRows[user];
     var unsortedTd = [];
     for (let dateIndex = 0; dateIndex < mySchedule.length; dateIndex += 2) {
       let newTd = document.createElement("td");
-      let startTime = ""+mySchedule[dateIndex].getHours()+":"+mySchedule[dateIndex].getMinutes()+"";
-      let endTime = ""+mySchedule[dateIndex+1].getHours()+":"+mySchedule[dateIndex+1].getMinutes()+"";
+      let startTime = "" + mySchedule[dateIndex].getHours() + ":" + mySchedule[dateIndex].getMinutes() + "";
+      let endTime = "" + mySchedule[dateIndex + 1].getHours() + ":" + mySchedule[dateIndex + 1].getMinutes() + "";
       let tdText = startTime + " - " + endTime;
+      if (tdText == "0:0 - 0:0") {
+        tdText = "-";
+      }
       let tdTextNode = document.createTextNode(tdText);
       newTd.appendChild(tdTextNode);
       newTd.id = mySchedule[dateIndex].getDay()
@@ -204,15 +280,72 @@ function propagateRows () {
       myRow.appendChild(myTd);
     }
   }
+  addSpecificIdToTd();
 }
 
-function launchBuilderPage () {
+function dateToString(dateObj) {
+  let stringToReturn = dateObj.getFullYear() + "-";
+  if ((dateObj.getMonth() + 1).toString().length  != 2) {
+    stringToReturn += "0" + (dateObj.getMonth() + 1) + "-";
+  } else {
+    stringToReturn += (dateObj.getMonth() + 1) + "-";
+  }
+  if (dateObj.getDate().toString().length != 2) {
+    stringToReturn += "0" + dateObj.getDate();
+  } else {
+    stringToReturn += dateObj.getDate();
+  }
+  return stringToReturn;
+  
+}
+
+function launchBuilderPage() {
   for (let user in users) {
     let selectOption = document.createElement("option");
     let optionText = document.createTextNode(upperFirstLetter(user));
     selectOption.appendChild(optionText);
     $("#userToSchedule")[0].appendChild(selectOption);
   }
+  let startDtString = dateToString(new Date());
+  $("#start_dt").attr("value", startDtString);
+}
+
+
+var lastSelected;
+
+function selectDateFunctionality() {
+  $("#builderPage td").click(function(){
+    
+    try {
+      lastSelected.toggleClass("highlightBlue");
+    } catch (e) {
+      
+    }
+    $(this).toggleClass("highlightBlue");
+    lastSelected = $(this);
+    
+    // Make Employee Selection Match Table Selection
+    let tdId = this.id; 
+    let userSelected = tdId.slice(0,-3);
+    userSelected = upperFirstLetter(userSelected);
+    $("#userToSchedule").val(userSelected);
+    
+    // Make Date Selection Match Table Selection 
+    let tdDay = this.id.slice(-1);
+    tdDay = parseInt(tdDay);
+    let todayDay = new Date().getDay();
+    todayDay = parseInt(todayDay);
+    var dateToChangeTo = new Date();
+    while (dateToChangeTo.getDay() < tdDay) {
+      dateToChangeTo.setDate(dateToChangeTo.getDate() + 1);
+    }
+    while (dateToChangeTo.getDay() > tdDay) {
+      dateToChangeTo.setDate(dateToChangeTo.getDate() - 1);
+    }
+    let dateStringVal = dateToString(dateToChangeTo);
+    $("#start_dt").val(dateStringVal);
+    
+  });
 }
 
 $(main);
