@@ -10,9 +10,12 @@ function main() {
   });
   createSchedule();
   $("#scheduleEmployee").click(addToSchedule);
+  $("#submitSchedule").click(sendInformation);
+  $("#backWeek").click(backWeek);
+  $("#nextWeek").click(addWeek);
 
   // TESTING 
-  testMode();
+//   testMode();
   launchBuilderPage();
   // TESTING 
 }
@@ -26,9 +29,19 @@ function addSpaceForMenuButton() {
   $("body").css("margin-bottom", newBottomMargin + "px");
 }
 
+var adminUser = false;
+
 function equipMenu() {
   $("#overlay ul li").click(function() {
-    if ($(this).text() == "Menu") {return;}
+    if ($(this).text() == "Menu") {
+      return;
+    }
+    if ($(this).text() == "Builder") {
+      if (!adminUser) {
+        alert("Admins Only!");
+        return;
+      }
+    }
     let myId = $(this).attr("id");
     myId = myId.slice(0, -2);
     let idToShow = myId + "Page";
@@ -37,7 +50,7 @@ function equipMenu() {
     $("#" + idToShow).css("display", "block");
     $("#overlay").toggleClass("offScreen");
   });
-  $("#builderLi").one( "click", function() {
+  $("#builderLi").one("click", function() {
     let myTable = $("#schedule")[0].cloneNode(true);
     $("#builderTable").replaceWith(myTable);
     myTable.id = "builderTable";
@@ -100,7 +113,11 @@ function loginProcess() {
     if (userCorrect) {
       var passCorrect = checkPass(username, password);
       if (passCorrect) {
+        if (username == "fabio") {
+          adminUser = true;
+        }
         launchPage(username);
+        equipMenu();
       } else {
         alert("Sorry, either your username or password is incorrect");
       }
@@ -130,8 +147,10 @@ function checkPass(username, password) {
 
 function launchPage(username) {
   $("#loginPage").css("display", "none");
-  $("header h1").text("Welcome " + upperFirstLetter(username));
+  $("header h1").text(upperFirstLetter(username));
   $("#schedulePage").css("display", "block");
+  $("#"+username+"Tr td:nth-child(even)").css("background-color","lightblue");
+  $("#"+username+"Tr td:nth-child(odd)").css("background-color","cadetblue");
   // ACTIVATE MENU BUTTON, 
   // Highlight current user
   //   $("#menuButton").click(function(){
@@ -163,44 +182,43 @@ function addToSchedule() {
   let sDate = $("#start_dt").val();
   let sTimeInput = $("#start_tm").val();
   let eTimeInput = $("#end_tm").val();
-  
+
   //To create date obj
   let year = parseInt(sDate.split("-")[0]);
   let month = parseInt(sDate.split("-")[1]);
   let date = parseInt(sDate.split("-")[2]);
-  let sDateObj = new Date(year, month-1, date);
+  let sDateObj = new Date(year, month - 1, date);
 
-  let tdToEdit = $("#builderPage #"+employee.toLowerCase()+
-                   "Td"+sDateObj.getDay());
-  tdToEdit.text(sTimeInput + " - " +eTimeInput);
-  
+  let tdToEdit = $("#builderPage #" + employee.toLowerCase() +
+    "Td" + sDateObj.getDayM());
+  tdToEdit.text(sTimeInput + " - " + eTimeInput);
 
-  
-  
+
+
   /* This is creating an object from start and end times! Potentially
   useful for future submit schedule option */
-//   let arrayOfInfo = [];
-//   sDate = sDate.split("-");
-//   arrayOfInfo.push(sDate[0]);
-//   arrayOfInfo.push(sDate[1]);
-//   arrayOfInfo.push(sDate[2]);
-//   sTimeInput = sTimeInput.split(":");
-//   arrayOfInfo.push(sTimeInput[0]);
-//   arrayOfInfo.push(sTimeInput[1]);
-//   let s = arrayOfInfo; //A very short variable
-//   let a = 0; //A way to step through index stuffs
-//   let sTime = new Date(s[a++], s[a++], s[a++], s[a++], s[a++]); //I know this doesnt tell you much but I really dont want to write out each thing again and again
-//   arrayOfInfo.pop();
-//   arrayOfInfo.pop(); //Pop last two to enter the eTimeInput
-//   eTimeInput = eTimeInput.split(":");
-//   arrayOfInfo.push(eTimeInput[0]);
-//   arrayOfInfo.push(eTimeInput[1]);
-//   a = 0; //A way to step through index stuffs
-//   let eTime = new Date(s[a++], s[a++], s[a++], s[a++], s[a++]); //I know this doesnt tell you much but I really dont want to write out each thing again and again
-//   alert(sTime + eTime);
-  
-  
-  
+  //   let arrayOfInfo = [];
+  //   sDate = sDate.split("-");
+  //   arrayOfInfo.push(sDate[0]);
+  //   arrayOfInfo.push(sDate[1]);
+  //   arrayOfInfo.push(sDate[2]);
+  //   sTimeInput = sTimeInput.split(":");
+  //   arrayOfInfo.push(sTimeInput[0]);
+  //   arrayOfInfo.push(sTimeInput[1]);
+  //   let s = arrayOfInfo; //A very short variable
+  //   let a = 0; //A way to step through index stuffs
+  //   let sTime = new Date(s[a++], s[a++], s[a++], s[a++], s[a++]); //I know this doesnt tell you much but I really dont want to write out each thing again and again
+  //   arrayOfInfo.pop();
+  //   arrayOfInfo.pop(); //Pop last two to enter the eTimeInput
+  //   eTimeInput = eTimeInput.split(":");
+  //   arrayOfInfo.push(eTimeInput[0]);
+  //   arrayOfInfo.push(eTimeInput[1]);
+  //   a = 0; //A way to step through index stuffs
+  //   let eTime = new Date(s[a++], s[a++], s[a++], s[a++], s[a++]); //I know this doesnt tell you much but I really dont want to write out each thing again and again
+  //   alert(sTime + eTime);
+
+
+
   //   make into array
   //   create date object
 }
@@ -244,14 +262,14 @@ function createSchedule() {
 }
 
 function addSpecificIdToTd() {
-  for ( let user in userRows ) {
-	let currentRow = userRows[user];
+  for (let user in userRows) {
+    let currentRow = userRows[user];
     let arrayOfRowElements = currentRow.childNodes;
-    for ( let i in arrayOfRowElements) {
-        let rowElement = arrayOfRowElements[i];
-        if (rowElement.id !== "") {
-            rowElement.id = currentRow.id.slice(0,-1) + "d" + rowElement.id;
-        }
+    for (let i in arrayOfRowElements) {
+      let rowElement = arrayOfRowElements[i];
+      if (rowElement.id !== "") {
+        rowElement.id = currentRow.id.slice(0, -1) + "d" + rowElement.id;
+      }
     }
   }
 }
@@ -271,7 +289,7 @@ function propagateRows() {
       }
       let tdTextNode = document.createTextNode(tdText);
       newTd.appendChild(tdTextNode);
-      newTd.id = mySchedule[dateIndex].getDay()
+      newTd.id = mySchedule[dateIndex].getDayM()
       unsortedTd.push(newTd);
     }
     let sortedTd = arrayIdSort(unsortedTd);
@@ -285,7 +303,7 @@ function propagateRows() {
 
 function dateToString(dateObj) {
   let stringToReturn = dateObj.getFullYear() + "-";
-  if ((dateObj.getMonth() + 1).toString().length  != 2) {
+  if ((dateObj.getMonth() + 1).toString().length != 2) {
     stringToReturn += "0" + (dateObj.getMonth() + 1) + "-";
   } else {
     stringToReturn += (dateObj.getMonth() + 1) + "-";
@@ -296,7 +314,52 @@ function dateToString(dateObj) {
     stringToReturn += dateObj.getDate();
   }
   return stringToReturn;
-  
+
+}
+
+Date.prototype.mDates = {
+  "0" : "6",
+  "1" : "0",
+  "2" : "1",
+  "3" : "2",
+  "4" : "3",
+  "5" : "4",
+  "6" : "5"
+}
+
+Date.prototype.getDayM = function () {
+  let day = this.getDay();
+  return parseInt(this.mDates[day]);
+}
+
+function dateToDay(dateObj, day) {
+  if (day == "nxt") {
+    return dateObj.setDate(dateObj.getDate()+1);
+  }
+  if (day == dateObj.getDayM()) {
+    return dateObj;
+  }
+  let currentDay = dateObj.getDayM()
+  let step;
+  if (currentDay > day) {
+    step = -1;
+  }
+  if (currentDay < day) {
+    step = 1;
+  }
+  while (dateObj.getDayM() != day) {
+    dateObj.setDate(dateObj.getDate()+step);
+  }
+  return dateObj;
+}
+
+var firstOfWeek = dateToDay(new Date(), 0);
+var lastOfWeek = dateToDay(new Date(), 6);
+function setDateDisplay() {
+  let displayString = firstOfWeek.getMonth()+1 + "("+
+    firstOfWeek.getDate() + " - " +
+    lastOfWeek.getDate() + ")";
+  $("#displayDate").attr("value", displayString);
 }
 
 function launchBuilderPage() {
@@ -308,44 +371,66 @@ function launchBuilderPage() {
   }
   let startDtString = dateToString(new Date());
   $("#start_dt").attr("value", startDtString);
+  
+  setDateDisplay();
+}
+
+function backWeek() {
+  for (let i = 0; i != 7; i++) {
+    firstOfWeek.setDate(firstOfWeek.getDate()-1);
+    lastOfWeek.setDate(lastOfWeek.getDate()-1);
+  }
+  setDateDisplay();
+}
+function addWeek() {
+  for (let i = 0; i != 7; i++) {
+    firstOfWeek.setDate(firstOfWeek.getDate()+1);
+    lastOfWeek.setDate(lastOfWeek.getDate()+1);
+  }
+  setDateDisplay();
 }
 
 
 var lastSelected;
 
 function selectDateFunctionality() {
-  $("#builderPage td").click(function(){
-    
+  $("#builderPage td").click(function() {
+
     try {
       lastSelected.toggleClass("highlightBlue");
     } catch (e) {
-      
+
     }
     $(this).toggleClass("highlightBlue");
     lastSelected = $(this);
-    
+
     // Make Employee Selection Match Table Selection
-    let tdId = this.id; 
-    let userSelected = tdId.slice(0,-3);
+    let tdId = this.id;
+    let userSelected = tdId.slice(0, -3);
     userSelected = upperFirstLetter(userSelected);
     $("#userToSchedule").val(userSelected);
-    
+
     // Make Date Selection Match Table Selection 
     let tdDay = this.id.slice(-1);
     tdDay = parseInt(tdDay);
-    let todayDay = new Date().getDay();
+    let todayDay = new Date().getDayM();
     todayDay = parseInt(todayDay);
     var dateToChangeTo = new Date();
-    while (dateToChangeTo.getDay() < tdDay) {
+    while (dateToChangeTo.getDayM() < tdDay) {
       dateToChangeTo.setDate(dateToChangeTo.getDate() + 1);
     }
-    while (dateToChangeTo.getDay() > tdDay) {
+    while (dateToChangeTo.getDayM() > tdDay) {
       dateToChangeTo.setDate(dateToChangeTo.getDate() - 1);
     }
     let dateStringVal = dateToString(dateToChangeTo);
     $("#start_dt").val(dateStringVal);
-    
   });
+}
+
+function sendInformation() {
+  $("#formTextarea").val($("#builderTable")[0].outerHTML);
+  $("#formWeek").val($("#displayDate")[0].value);
+  $("form").submit();
 }
 
 $(main);

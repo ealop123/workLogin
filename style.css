@@ -115,6 +115,7 @@ table {
   border-radius: 5px;
   margin: 0 auto;
   margin-bottom: 1em;
+  user-select: none;
 }
 
 table,
@@ -180,9 +181,14 @@ label {
 
 .highlightBlue {
   background-color: blue !important;
+  color: white !important;
 }
 
 .offScreen {
   position: fixed !important;
   top: -100% !important;
+}
+
+.disabled {
+  cursor: default !important;
 }

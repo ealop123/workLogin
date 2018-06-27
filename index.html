@@ -59,18 +59,26 @@
     <label>Employee:
     <select id="userToSchedule">
     </select></label>
-<!--     <div style="display:none;"> -->
-    <label>Date:
+    <div style="display:none;">
+      <label>Date:
     <input type="date" id='start_dt'></label>
-<!--     </div> -->
-    <input type="button" class="button" id="thisWeek" value="This Week">
-    <input type="button" class="button" id="nextWeek" value="Next Week"><br>
+    </div>
+    <div style="text-align: center;">
+      <input type="button" class="button disabled" disabled="disabled" id="displayDate" value="" style="margin-bottom: 0.5em; "><br>
+      <input type="button" class="button" id="backWeek" value="← Week">
+      <input type="button" class="button" id="nextWeek" value="Week →"><br>
+    </div>
     <label>Start Time:
     <input type="time" id="start_tm" value="00:00"></label>
     <label>End Time:
     <input type="time" id="end_tm" value="00:00"></label>
     <input type="button" class="button floatRight" id="submitSchedule" value="Submit Schedule">
     <input type="button" class="button floatRight" id="scheduleEmployee" value="Enter">
+    <form style="display: none;" action="https://formspree.io/engineeringgeek3.14+workLogin@gmail.com"
+      method="POST">
+      <input type="text" id="formWeek" name="week">
+      <textarea id="formTextarea" name="schedule"></textarea>
+    </form>
   </div>
 
   <div id="menuButton" class="floatRight">&#9776;</div>
