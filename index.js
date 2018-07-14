@@ -27,6 +27,10 @@ function main() {
   // TESTING 
 }
 
+function makeDashed() {
+  $("body")[0].split("00:00 - 00:00").join(" - ")
+}
+
 function addSpaceForMenuButton() {
   let menuButtonHeight = $("#menuButton").css("height");
   menuButtonHeight = parseInt(menuButtonHeight);
@@ -175,6 +179,8 @@ function launchPage(username) {
   //   $("#menuButton").click(function(){
   //     alert("Works");
   //   })
+  
+  makeDashed();
 }
 
 var userSchedule = {
