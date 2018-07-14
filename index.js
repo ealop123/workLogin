@@ -1,3 +1,10 @@
+/*
+  Next time I need to add a way to implement the new schedule
+  I recently fixed the problem where fabio's built schedule would have a color for everyone
+  I am in the process of redesigning this from the ground up, but this will still be functional
+*/
+
+
 function main() {
   addSpaceForMenuButton();
   showLoginPage();
@@ -146,6 +153,18 @@ function checkPass(username, password) {
 }
 
 function launchPage(username) {
+  
+  try {
+  if (thisWeek) {
+    $("#schedule")[0].outerHTML = thisWeek;
+    $("table")[0].id = "schedule";
+  }
+  } catch (e) {
+    
+  }
+  if (username == "fabio") {
+    username = "Admin";
+  }
   $("#loginPage").css("display", "none");
   $("header h1").text(upperFirstLetter(username));
   $("#schedulePage").css("display", "block");
@@ -428,7 +447,8 @@ function selectDateFunctionality() {
 }
 
 function sendInformation() {
-  $("#formTextarea").val($("#builderTable")[0].outerHTML);
+  lastSelected.toggleClass("highlightBlue");
+  $("#formTextarea").val((JSON.stringify($("#builderTable")[0].outerHTML)));
   $("#formWeek").val($("#displayDate")[0].value);
   $("form").submit();
 }
