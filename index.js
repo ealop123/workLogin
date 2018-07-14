@@ -72,6 +72,8 @@ function equipMenu() {
 function testMode() {
   $(".webpage").css("display", "none");
   $("#schedulePage").css("display", "block");
+  
+  
   equipMenu();
 }
 
@@ -179,8 +181,6 @@ function launchPage(username) {
   //   $("#menuButton").click(function(){
   //     alert("Works");
   //   })
-  
-  makeDashed();
 }
 
 var userSchedule = {
