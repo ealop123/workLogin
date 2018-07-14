@@ -28,7 +28,7 @@ function main() {
 }
 
 function makeDashed() {
-  $("body")[0].split("00:00 - 00:00").join(" - ")
+  $("body")[0].outerHTML = $("body")[0].outerHTML.split("00:00 - 00:00").join(" - ")
 }
 
 function addSpaceForMenuButton() {
